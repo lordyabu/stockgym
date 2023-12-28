@@ -3,11 +3,11 @@ name: Run Unit Tests
 on:
   push:
     branches:
-      - main  # Adjust the branch name as needed
+      - main
 
 jobs:
   test:
-    runs-on: windows-latest  # Use a Windows runner
+    runs-on: windows-latest
 
     steps:
     - name: Checkout code
@@ -16,7 +16,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.13  # Specify the Python version you need
+        python-version: 3.12.1
 
     - name: Install dependencies
       run: |
