@@ -28,4 +28,3 @@ jobs:
         python -m pytest --exitfirst src/envs/stock/graph_unittests.py
         python -m pytest --exitfirst src/envs/stock/trader_unittests.py
         
-        
