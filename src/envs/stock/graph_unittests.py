@@ -25,7 +25,7 @@ class TestStockGraph(unittest.TestCase):
     def test_update_graph_mismatched_data(self):
         graph = StockGraph(800, 600, (0, 0, 0))
         prices = [10, 20, 30, 40]
-        actions = [0, 1, 2]  # Mismatched lengths
+        actions = [0, 1, 2, 3]  # Mismatched lengths
 
         with self.assertRaises(ValueError):
             graph.update_graph(prices, actions)
