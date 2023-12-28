@@ -83,3 +83,21 @@ class Trader:
                 self.pnl_pct += (short_entry_price / current_price - 1) * 100
 
         self.action_list.append(action)
+
+    def close_all_positions(self):
+        """
+        Forcibly closes all open positions, both long and short.
+        """
+        current_price = self.price_list[-1]
+
+        # Close all long positions
+        while self.open_positions['long']:
+            long_entry_price = self.open_positions['long'].pop().enter_price
+            self.pnl += (current_price - long_entry_price)
+            self.pnl_pct += (current_price / long_entry_price - 1) * 100
+
+        # Close all short positions
+        while self.open_positions['short']:
+            short_entry_price = self.open_positions['short'].pop().enter_price
+            self.pnl += (short_entry_price - current_price)
+            self.pnl_pct += (short_entry_price / current_price - 1) * 100

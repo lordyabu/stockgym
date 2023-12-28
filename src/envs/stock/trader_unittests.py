@@ -121,6 +121,42 @@ class TestTrader(unittest.TestCase):
         self.assertEqual(trader.pnl, -.5)  # Expected PnL after these trades
         self.assertAlmostEqual(trader.pnl_pct, 0, places=5)
 
+    def test_close_all_long_positions(self):
+        trader = Trader(multiple_units=True)
+        trader.step(100)
+        trader.action(Trader.BUY)
+        trader.step(110)
+        trader.action(Trader.BUY)
+
+        # Close all long positions
+        trader.step(120)
+        trader.close_all_positions()
+
+        # Check if all long positions are closed
+        self.assertEqual(len(trader.open_positions['long']), 0)
+
+        # Check if PnL and PnL% are updated correctly
+        expected_pnl = (120 - 100) + (120 - 110)  # Expected PnL after closing all long positions
+        self.assertEqual(trader.pnl, expected_pnl)
+
+    def test_close_all_short_positions(self):
+        trader = Trader(multiple_units=True)
+        trader.step(100)
+        trader.action(Trader.SELL)
+        trader.step(90)
+        trader.action(Trader.SELL)
+
+        # Close all short positions
+        trader.step(80)
+        trader.close_all_positions()
+
+        # Check if all short positions are closed
+        self.assertEqual(len(trader.open_positions['short']), 0)
+
+        # Check if PnL and PnL% are updated correctly
+        expected_pnl = (100 - 80) + (90 - 80)  # Expected PnL after closing all short positions
+        self.assertEqual(trader.pnl, expected_pnl)
+
 
 if __name__ == '__main__':
     unittest.main()
