@@ -25,5 +25,5 @@ jobs:
 
     - name: Run unit tests
       run: |
-        python -m pytest src/envs/stock/graph_unittests.py
-        python -m pytest src/envs/stock/trader_unittests.py
+        python -m pytest --exitfirst src/envs/stock/graph_unittests.py
+        python -m pytest --exitfirst src/envs/stock/trader_unittests.py
