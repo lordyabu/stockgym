@@ -23,19 +23,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Run graph_unittests.py
-      run: python -m pytest src/envs/stock/graph_unittests.py
-      continue-on-error: true  # Continue to the next step regardless of the test result
-
-    - name: Run trader_unittests.py
-      run: python -m pytest src/envs/stock/trader_unittests.py
-      continue-on-error: true  # Continue to the next step regardless of the test result
-
-    - name: Check test results
+    - name: Run unit tests
       run: |
-        if [ ${{ job.status }} == "success" ]; then
-          echo "Tests passed"
-        else
-          echo "Tests failed"
-          exit 1
-        fi
+        python -m pytest src/envs/stock/graph_unittests.py
+        python -m pytest src/envs/stock/trader_unittests.py
