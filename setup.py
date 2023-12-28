@@ -1,8 +1,8 @@
 import sys
 from setuptools import setup, find_packages
 
-if sys.version_info < (3, 9):
-    sys.exit('Python < 3.9 is not supported!')
+if sys.version_info < (3, 10):
+    sys.exit('Python < 3.10 is not supported')
 
 setup(
     name='market_simulator_envs',

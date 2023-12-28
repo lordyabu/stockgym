@@ -42,10 +42,14 @@ class Trader:
         invalid_single_buy = (action == self.BUY and self.multiple_units and len(self.open_positions['short']) > 0)
         invalid_single_sell = (action == self.SELL and self.multiple_units and len(self.open_positions['long']) > 0)
 
-                # Updated assert to check multiple_units and invalid buy/sell actions
+        invalid_all_buy = (action == self.BUY_ALL and self.multiple_units and (len(self.open_positions['short']) == 0 or len(self.open_positions['long']) > 0))
+        invalid_all_sell = (action == self.SELL_ALL and self.multiple_units and (len(self.open_positions['long']) == 0 or len(self.open_positions['short']) > 0))
+
         assert ((action in [self.BUY, self.SELL, self.HOLD]) or \
                ((action in [self.SELL_ALL, self.BUY_ALL]) and self.multiple_units)) and \
-               (not invalid_buy and not invalid_sell and not invalid_single_sell and not invalid_single_buy), "Invalid action"
+               (not invalid_buy and not invalid_sell and not invalid_single_sell and not invalid_single_buy and not \
+                invalid_all_buy and not invalid_all_sell), "Invalid action"
+
         current_price = self.price_list[-1]
 
         if action == self.BUY:
@@ -66,32 +70,16 @@ class Trader:
             else:
                 # Open short position
                 self.open_positions['short'].append(Unit(pos_type='short', enter_price=current_price, start_step=self.current_step))
-        elif action == self.SELL_ALL and self.multiple_units:
+        elif action == self.SELL_ALL:
             while self.open_positions['long']:
                 long_entry_price = self.open_positions['long'].pop().enter_price
                 self.pnl += (current_price - long_entry_price)
                 self.pnl_pct += (current_price / long_entry_price - 1) * 100
 
-        elif action == self.BUY_ALL and self.multiple_units:
+        elif action == self.BUY_ALL:
             while self.open_positions['short']:
                 short_entry_price = self.open_positions['short'].pop().enter_price
                 self.pnl += (short_entry_price - current_price)
                 self.pnl_pct += (short_entry_price / current_price - 1) * 100
 
         self.action_list.append(action)
-
-
-# Example usage
-trader = Trader()
-
-trader.step(100)  # Initial price
-trader.action(Trader.BUY)  # Open long at 100
-trader.step(110)  # New price
-trader.action(Trader.SELL)  # Close long at 110
-print(f"PnL: {trader.pnl}, PnL%: {trader.pnl_pct}")
-
-trader.step(90)  # Another new price
-trader.action(Trader.SELL)  # Open short at 90
-trader.step(80)  # New price
-trader.action(Trader.BUY)  # Close short at 80
-print(f"PnL: {trader.pnl}, PnL%: {trader.pnl_pct}")

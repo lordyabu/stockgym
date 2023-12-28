@@ -85,9 +85,17 @@ class TestTrader(unittest.TestCase):
         # Testing in multiple units mode
         trader = Trader(multiple_units=True)
         trader.step(100)
+        with self.assertRaises(AssertionError):
+            trader.action(Trader.BUY_ALL)
+
+        with self.assertRaises(AssertionError):
+            trader.action(Trader.SELL_ALL)
 
         # Open multiple long positions
         trader.action(Trader.BUY)
+        with self.assertRaises(AssertionError):
+            trader.action(Trader.BUY_ALL)
+
         trader.action(Trader.BUY)
         with self.assertRaises(AssertionError):
             # Attempt to close a single long position when multiple are open
@@ -99,6 +107,8 @@ class TestTrader(unittest.TestCase):
         # Open multiple short positions
         trader.step(99.75)
         trader.action(Trader.SELL)
+        with self.assertRaises(AssertionError):
+            trader.action(Trader.SELL_ALL)
         trader.action(Trader.SELL)
         with self.assertRaises(AssertionError):
             # Attempt to close a single short position when multiple are open
