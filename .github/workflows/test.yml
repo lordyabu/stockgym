@@ -25,8 +25,7 @@ jobs:
 
     - name: Run unit tests
       run: |
-        if python -m pytest src/envs/stock/graph_unittests.py && python -m pytest src/envs/stock/trader_unittests.py
-        then
+        if (python -m pytest src/envs/stock/graph_unittests.py && python -m pytest src/envs/stock/trader_unittests.py); then
           echo "Tests passed"
         else
           echo "Tests failed"
