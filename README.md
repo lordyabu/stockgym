@@ -1,3 +1,5 @@
+[![Run Unit Tests](https://github.com/lordyabu/stockgym/actions/workflows/test.yml/badge.svg)](https://github.com/lordyabu/stockgym/actions/workflows/test.yml)
+
 #ToDo
 
 1. Implement up and to the right gym / down and to the right gym
