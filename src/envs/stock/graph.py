@@ -48,7 +48,10 @@ class StockGraph:
         # Draw horizontal gridlines
         label_step = max(1, (max_price - min_price) // 5)
         for i in range(min_price, max_price + 1, label_step):
-            y = self.height - 50 - ((i - min_price) / (max_price - min_price)) * (self.height - 100)
+            try:
+                y = self.height - 50 - ((i - min_price) / (max_price - min_price)) * (self.height - 100)
+            except:
+                y = self.height -50 - ((i - min_price) / (1)) * (self.height - 100)
             pygame.draw.line(self.screen, (50, 50, 50), (50, y), (self.width - 50, y))
 
         # Draw vertical gridlines
