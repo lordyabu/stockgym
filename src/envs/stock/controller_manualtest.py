@@ -14,7 +14,7 @@ controller = Controller(state_type='Basic',
                         slope=2,
                         noise=5,
                         starting_price=100,
-                        num_steps=10,
+                        num_steps=50,
                         multiple_units=True)
 
 try:
@@ -38,11 +38,7 @@ try:
             else:
                 print("Invalid action. Please enter a number between 0 and 4. This should not occur in model: only human")
 
-        controller.render()
-        for event in pygame.event.get():
-            if event.type is pygame.QUIT:
-                pygame.quit()
-                exit()
+
 
         print(f"PnL: {controller.trader.pnl}, PnL%: {controller.trader.pnl_pct}")
         print(f'Prev_Obvs: {prev_obv}, Reward: {reward}, Done: {done}')
@@ -50,7 +46,12 @@ try:
         if done:
             break
 
-        controller.get_next_price()
+        controller.render()
+        for event in pygame.event.get():
+            if event.type is pygame.QUIT:
+                pygame.quit()
+                exit()
+
 
 except Exception as e:
     print(e)

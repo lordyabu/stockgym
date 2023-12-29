@@ -76,6 +76,7 @@ class Controller:
 
         self.trader.action(action)
         if self.step_count + 1 < self.num_steps:
+            self.get_next_price()
             return self.get_state(), self.get_reward(is_complete=False), False, {}
         else:
             self.trader.close_all_positions()
@@ -125,19 +126,17 @@ class Controller:
 
     def render(self):
         """
-        Calculates the reward based on the current state of the environment.
-
-        Args:
-            is_complete (bool): Flag indicating if the episode is complete.
-
-        Returns:
-            float: The calculated reward.
+        Renders the current state of the stock trading environment.
         """
 
         # This method will update the display
-        if len(self.trader.price_list) > 1:
+        if len(self.trader.action_list) > 1:
             self.graph.screen.fill(self.graph.background_color)
-            self.graph.update_graph(self.trader.price_list, self.trader.action_list)
+            if len(self.trader.price_list) > len(self.trader.action_list):
+                print(len(self.trader.price_list[:-1]), len(self.trader.action_list) )
+                self.graph.update_graph(self.trader.price_list[:-1], self.trader.action_list)
+            else:
+                raise ValueError("Given implementation shouldn't be here")
             pygame.display.flip()
 
     def get_valid_actions(self):

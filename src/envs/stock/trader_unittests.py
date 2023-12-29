@@ -40,9 +40,7 @@ class TestTrader(unittest.TestCase):
 
         # Open a long position
         trader.action(Trader.BUY)
-        with self.assertRaises(AssertionError):
-            # Attempt to open another long position when one is already open
-            trader.action(Trader.BUY)
+        self.assertEqual(trader.is_valid_action(Trader.BUY), False)
 
         # Close the long position
         trader.step(110)
@@ -51,9 +49,8 @@ class TestTrader(unittest.TestCase):
         # Open a short position
         trader.step(90)
         trader.action(Trader.SELL)
-        with self.assertRaises(AssertionError):
-            # Attempt to open another short position when one is already open
-            trader.action(Trader.SELL)
+
+        self.assertEqual(trader.is_valid_action(Trader.SELL), False)
 
     def test_multiple_units_buy_sell(self):
         trader = Trader(multiple_units=True)
@@ -85,21 +82,17 @@ class TestTrader(unittest.TestCase):
         # Testing in multiple units mode
         trader = Trader(multiple_units=True)
         trader.step(100)
-        with self.assertRaises(AssertionError):
-            trader.action(Trader.BUY_ALL)
+        self.assertEqual(trader.is_valid_action(Trader.BUY_ALL), False)
 
-        with self.assertRaises(AssertionError):
-            trader.action(Trader.SELL_ALL)
-
+        self.assertEqual(trader.is_valid_action(Trader.SELL_ALL), False)
         # Open multiple long positions
         trader.action(Trader.BUY)
-        with self.assertRaises(AssertionError):
-            trader.action(Trader.BUY_ALL)
+
+        self.assertEqual(trader.is_valid_action(Trader.BUY_ALL), False)
 
         trader.action(Trader.BUY)
-        with self.assertRaises(AssertionError):
-            # Attempt to close a single long position when multiple are open
-            trader.action(Trader.SELL)
+
+        self.assertEqual(trader.is_valid_action(Trader.SELL), False)
 
         trader.step(105)
         trader.action(Trader.SELL_ALL)
@@ -107,12 +100,11 @@ class TestTrader(unittest.TestCase):
         # Open multiple short positions
         trader.step(99.75)
         trader.action(Trader.SELL)
-        with self.assertRaises(AssertionError):
-            trader.action(Trader.SELL_ALL)
+
+        self.assertEqual(trader.is_valid_action(Trader.SELL_ALL), False)
         trader.action(Trader.SELL)
-        with self.assertRaises(AssertionError):
-            # Attempt to close a single short position when multiple are open
-            trader.action(Trader.BUY)
+
+        self.assertEqual(trader.is_valid_action(Trader.BUY), False)
 
         trader.step(105)
         trader.action(Trader.BUY_ALL)
