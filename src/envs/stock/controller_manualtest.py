@@ -20,18 +20,19 @@ controller = Controller(state_type='Basic',
 try:
     while True:
         print("\nCurrent Price:", controller.current_price)
-        print("Available actions: 0-BUY, 1-SELL, 2-HOLD, 3-SELL ALL, 4-BUY ALL")
+        print("Available actions: 0-BUY, 1-SELL, 2-HOLD, 3-BUY ALL, 4-SELL ALL")
 
         # Loop until a valid action is processed
         print(f'State: {controller.get_state()}')
         while True:
+            print(controller.get_valid_actions())
             action = int(input("Enter your action (0-4): "))
             if action in controller.get_valid_actions():
                 try:
                     prev_obv, reward, done, info = controller.step(action)  # Process the valid action
                     break  # Break the loop if the action is valid and processed
                 except Exception as e:
-                    raise ValueError("Going to mask actions so this should not come up")
+                    raise ValueError("Going to mask actions so this should not come up ever!!!")
             elif action in [-1]:
                 exit()
             else:

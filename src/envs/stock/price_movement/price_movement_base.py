@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class PriceGeneratorABC(ABC):
     """
     Abstract base class for price generation.

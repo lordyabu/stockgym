@@ -28,6 +28,6 @@ class UpAndToTheRightEnv(gym.Env):
 
 
     def step(self, action):
-
+        pass
 
 
