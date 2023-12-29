@@ -4,9 +4,10 @@ import pygame
 
 controller = Controller(state_type='Basic',
                         reward_type='FinalOnly',
+                        price_movement_type='Linear',
                         num_prev_obvs=10,
                         offset_scaling=True,
-                        scale=True,
+                        scale=False,
                         graph_width=800,
                         graph_height=600,
                         background_color=(0, 0, 0),
@@ -24,39 +25,31 @@ try:
         # Loop until a valid action is processed
         print(f'State: {controller.get_state()}')
         while True:
-            try:
-                action = int(input("Enter your action (0-4): "))
-                if action in [0, 1, 2, 3, 4]:
-                    try:
-                        done = controller.step(action)  # Process the valid action
-                        break  # Break the loop if the action is valid and processed
-                    except Exception as e:
-                        print(e)
-                elif action in [-1]:
-                    exit()
-                else:
-                    print("Invalid action. Please enter a number between 0 and 4.")
-            except ValueError:
-                print("Invalid input. Please enter a number.")
-
-        if done:
-            controller.trader.close_all_positions()
-            print(f"PnL: {controller.trader.pnl}, PnL%: {controller.trader.pnl_pct}")
-            print(f'Reward: {controller.get_reward(True)}')
-            break
+            action = int(input("Enter your action (0-4): "))
+            if action in controller.get_valid_actions():
+                try:
+                    prev_obv, reward, done, info = controller.step(action)  # Process the valid action
+                    break  # Break the loop if the action is valid and processed
+                except Exception as e:
+                    raise ValueError("Going to mask actions so this should not come up")
+            elif action in [-1]:
+                exit()
+            else:
+                print("Invalid action. Please enter a number between 0 and 4. This should not occur in model: only human")
 
         controller.render()
-
-        controller.get_next_price()
-
-        print(f"PnL: {controller.trader.pnl}, PnL%: {controller.trader.pnl_pct}")
-
         for event in pygame.event.get():
             if event.type is pygame.QUIT:
                 pygame.quit()
                 exit()
 
-        print(f'Reward: {controller.get_reward(False)}')
+        print(f"PnL: {controller.trader.pnl}, PnL%: {controller.trader.pnl_pct}")
+        print(f'Prev_Obvs: {prev_obv}, Reward: {reward}, Done: {done}')
+
+        if done:
+            break
+
+        controller.get_next_price()
 
 except Exception as e:
     print(e)

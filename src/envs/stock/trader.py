@@ -30,9 +30,10 @@ class Trader:
         self.price_list.append(price)
         self.current_step += 1
 
-    def action(self, action):
+
+    def is_valid_action(self, action):
         """
-        Records a trading action, updates the action list, manages positions, and calculates PnL and PnL%.
+        Checks if the given action is valid based on the current state.
         """
         # Check for invalid action under single unit mode
         invalid_buy = (action == self.BUY and not self.multiple_units and len(self.open_positions['long']) > 0)
@@ -45,10 +46,20 @@ class Trader:
         invalid_all_buy = (action == self.BUY_ALL and self.multiple_units and (len(self.open_positions['short']) == 0 or len(self.open_positions['long']) > 0))
         invalid_all_sell = (action == self.SELL_ALL and self.multiple_units and (len(self.open_positions['long']) == 0 or len(self.open_positions['short']) > 0))
 
-        assert ((action in [self.BUY, self.SELL, self.HOLD]) or \
-               ((action in [self.SELL_ALL, self.BUY_ALL]) and self.multiple_units)) and \
-               (not invalid_buy and not invalid_sell and not invalid_single_sell and not invalid_single_buy and not \
-                invalid_all_buy and not invalid_all_sell), "Invalid action"
+        # Check if the action is one of the allowed actions
+        is_allowed_action = (action in [self.BUY, self.SELL, self.HOLD]) or \
+                            ((action in [self.SELL_ALL, self.BUY_ALL]) and self.multiple_units)
+
+        # Return True if the action is valid, False otherwise
+        return is_allowed_action and not (invalid_buy or invalid_sell or invalid_single_sell or invalid_single_buy or invalid_all_buy or invalid_all_sell)
+
+    def action(self, action):
+        """
+        Records a trading action, updates the action list, manages positions, and calculates PnL and PnL%.
+        """
+
+        #ToDo remove once we know controller is stopping this from happening
+        assert self.is_valid_action(action), "This should never occur as we are also checking in controller.step"
 
         current_price = self.price_list[-1]
 

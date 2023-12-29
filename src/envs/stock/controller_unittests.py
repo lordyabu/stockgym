@@ -6,7 +6,7 @@ class TestController(unittest.TestCase):
 
     def setUp(self):
         # Set up a Controller instance for testing
-        self.controller = Controller(state_type='Basic', reward_type='FinalOnly',
+        self.controller = Controller(state_type='Basic', reward_type='FinalOnly', price_movement_type='Linear',
                                      num_prev_obvs=5, offset_scaling=False, scale=False,
                                      graph_width=800, graph_height=600, background_color=(0, 0, 0),
                                      slope=2, noise=1, starting_price=100, num_steps=50,
