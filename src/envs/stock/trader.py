@@ -25,7 +25,7 @@ class Trader:
 
         self.action_list = []
         self.price_list = []
-        self.current_step = -1
+        self.current_step = -1  # Adding first price will make step 0
         self.pnl = 0
         self.pnl_pct = 0
         self.open_positions = {'long': [], 'short': []}

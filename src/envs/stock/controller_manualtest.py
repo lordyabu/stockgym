@@ -1,7 +1,6 @@
 from src.envs.stock.controller import Controller
 import pygame
 
-
 controller = Controller(state_type='Basic',
                         reward_type='FinalOnly',
                         price_movement_type='Linear',
@@ -29,19 +28,18 @@ try:
             action = int(input("Enter your action (0-4): "))
             if action in controller.get_valid_actions():
                 try:
-                    prev_obv, reward, done, info = controller.step(action)  # Process the valid action
+                    next_obv, reward, done, info = controller.step(action)  # Process the valid action
                     break  # Break the loop if the action is valid and processed
                 except Exception as e:
                     raise ValueError("Going to mask actions so this should not come up ever!!!")
             elif action in [-1]:
                 exit()
             else:
-                print("Invalid action. Please enter a number between 0 and 4. This should not occur in model: only human")
-
-
+                print(
+                    "Invalid action. Please enter a number between 0 and 4. This should not occur in model: only human")
 
         print(f"PnL: {controller.trader.pnl}, PnL%: {controller.trader.pnl_pct}")
-        print(f'Prev_Obvs: {prev_obv}, Reward: {reward}, Done: {done}')
+        print(f'Next Observation: {next_obv}, Reward: {reward}, Done: {done}')
 
         if done:
             break
