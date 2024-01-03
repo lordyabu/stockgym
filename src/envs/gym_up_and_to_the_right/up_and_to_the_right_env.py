@@ -66,17 +66,3 @@ class UpAndToTheRightEnv(gym.Env):
 
     def seed(self, x):
         pass
-
-
-env = UpAndToTheRightEnv(state_type="Basic",
-                         reward_type="FinalOnly",
-                         num_prev_obvs=5,
-                         price_movement_type="Linear",
-                         offset_scaling=1.0,
-                         scale=1.0,
-                         slope=1.0,
-                         noise=0.1,
-                         starting_price=100,
-                         num_steps=100,
-                         multiple_units=True,
-                         render=False)

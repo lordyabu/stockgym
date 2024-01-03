@@ -133,6 +133,9 @@ class Controller:
         Renders the current state of the stock trading environment.
         """
 
+        if not self.graph.initialized:
+            self.graph._initialize_window()
+
         # This method will update the display
         if len(self.trader.action_list) > 1:
             self.graph.screen.fill(self.graph.background_color)

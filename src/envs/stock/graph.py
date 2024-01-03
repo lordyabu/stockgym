@@ -17,18 +17,15 @@ class StockGraph:
             background_color (tuple): The background color of the graph in RGB format.
         """
 
-        pygame.init()
-        self.screen = pygame.display.set_mode((width, height))
-        self.background_color = background_color
         self.width, self.height = width, height
-        self.screen.fill(self.background_color)
-        self.font = pygame.font.Font(None, 24)  # Default font for labels
-        pygame.display.flip()
-
-        self.colors = {0: (0, 255, 0),  # Green for 'buy',
-                       3: (0, 255, 0),  # Green for 'buy all'
-                       1: (255, 0, 0),  # Red for 'sell'
-                       4: (255, 0, 0)}  # Red for 'sell all'
+        self.background_color = background_color
+        self.initialized = False
+        self.colors = {
+            0: (0, 255, 0),  # Green for 'buy'
+            3: (0, 255, 0),  # Green for 'buy all'
+            1: (255, 0, 0),  # Red for 'sell'
+            4: (255, 0, 0)   # Red for 'sell all'
+        }
 
     def update_graph(self, prices, actions):
         """
@@ -71,6 +68,17 @@ class StockGraph:
                 pygame.draw.circle(self.screen, color, (int(x), int(y)), 5)
 
         pygame.display.flip()
+
+    def _initialize_window(self):
+        """
+        Initializes the Pygame window and other necessary components.
+        """
+        pygame.init()
+        self.screen = pygame.display.set_mode((self.width, self.height))
+        self.screen.fill(self.background_color)
+        self.font = pygame.font.Font(None, 24)  # Default font for labels
+        pygame.display.flip()
+        self.initialized = True
 
     def _draw_axes_and_labels(self, prices, num_steps):
         """
