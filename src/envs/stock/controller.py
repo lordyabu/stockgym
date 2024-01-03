@@ -140,7 +140,6 @@ class Controller:
         if len(self.trader.action_list) > 1:
             self.graph.screen.fill(self.graph.background_color)
             if len(self.trader.price_list) > len(self.trader.action_list):
-                print(len(self.trader.price_list[:-1]), len(self.trader.action_list) )
                 self.graph.update_graph(self.trader.price_list[:-1], self.trader.action_list)
             else:
                 raise ValueError("Given implementation shouldn't be here")

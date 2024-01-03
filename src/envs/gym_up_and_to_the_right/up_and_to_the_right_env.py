@@ -66,3 +66,10 @@ class UpAndToTheRightEnv(gym.Env):
 
     def seed(self, x):
         pass
+
+    def close(self):
+        """
+        Closes the environment, including any associated resources like the Pygame window.
+        """
+        if self.controller.render_graph:
+            self.controller.graph.close_window()

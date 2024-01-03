@@ -7,6 +7,7 @@ class TestStockGraph(unittest.TestCase):
         width, height = 800, 600
         background_color = (0, 0, 0)  # Black background
         graph = StockGraph(width, height, background_color)
+        graph._initialize_window()
 
         self.assertEqual(graph.width, width)
         self.assertEqual(graph.height, height)
@@ -14,6 +15,7 @@ class TestStockGraph(unittest.TestCase):
 
     def test_update_graph_valid_data(self):
         graph = StockGraph(800, 600, (0, 0, 0))
+        graph._initialize_window()
         prices = [10, 20, 30, 40, 50]
         actions = [0, 1, 2, 1, 0]  # Corresponds to hold, buy, sell, buy, hold
 
@@ -24,6 +26,7 @@ class TestStockGraph(unittest.TestCase):
 
     def test_update_graph_mismatched_data(self):
         graph = StockGraph(800, 600, (0, 0, 0))
+        graph._initialize_window()
         prices = [10, 20, 30, 40]
         actions = [0, 1, 2]  # Mismatched lengths
 
