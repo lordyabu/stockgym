@@ -3,6 +3,4 @@ pandas
 gym
 pytest
 pygame
-black
-flake8
 scikit-learn

@@ -16,7 +16,7 @@ class Controller:
 
     def __init__(self, state_type, reward_type, price_movement_type, num_prev_obvs, offset_scaling, scale, graph_width,
                  graph_height, background_color, slope, noise, starting_price, num_steps,
-                 multiple_units=False, **kwargs):
+                 multiple_units=False, render=False, **kwargs):
         """
         Initializes the Controller object.
 
@@ -38,7 +38,11 @@ class Controller:
             **kwargs: Additional keyword arguments.
         """
 
-        self.graph = StockGraph(graph_width, graph_height, background_color)
+        self.render_graph = render
+
+        if self.render_graph:
+            self.graph = StockGraph(graph_width, graph_height, background_color)
+
         self.trader = Trader(multiple_units)
         self.trader.step(starting_price)
 
