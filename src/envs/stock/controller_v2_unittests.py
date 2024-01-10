@@ -1,12 +1,12 @@
 import unittest
 import numpy as np
-from src.envs.stock.controller import Controller
+from src.envs.stock.controller_v2 import ControllerV2
 
 class TestController(unittest.TestCase):
 
     def setUp(self):
         # Set up a Controller instance for testing
-        self.controller = Controller(state_type='Basic', reward_type='FinalOnly', price_movement_type='Linear',
+        self.controller = ControllerV2(state_type='Basic', reward_type='FinalOnly', price_movement_type='Linear',
                                      num_prev_obvs=5, offset_scaling=False, scale=False,
                                      graph_width=800, graph_height=600, background_color=(0, 0, 0),
                                      slope=2, noise=1, starting_price=100, num_steps=50,
@@ -58,19 +58,23 @@ class TestController(unittest.TestCase):
 
 
     def test_step(self):
-        controller_one = Controller(state_type='Basic', reward_type='FinalOnly', price_movement_type='Linear',
+        controller_one = ControllerV2(state_type='Basic', reward_type='FinalOnly', price_movement_type='Linear',
                                      num_prev_obvs=5, offset_scaling=False, scale=False,
                                      graph_width=800, graph_height=600, background_color=(0, 0, 0),
                                      slope=2, noise=1, starting_price=100, num_steps=50,
                                      multiple_units=True)
 
-        with self.assertRaises(ValueError):
-            controller_one.step(3)
-
-        state, reward, done, info = controller_one.step(1)
+        state, reward, done, truncated, info = controller_one.step(3)
 
         self.assertEqual(done, False)
+        self.assertEqual(truncated, True)
+
+        state, reward, done, truncated, info = controller_one.step(1)
+
+        self.assertEqual(done, False)
+        self.assertEqual(truncated, False)
         self.assertEqual(reward, 0)
+
 
 if __name__ == '__main__':
     unittest.main()

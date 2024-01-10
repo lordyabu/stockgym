@@ -69,7 +69,7 @@ class StockGraph:
 
         pygame.display.flip()
 
-        
+
     def close_window(self):
         """
         Closes the Pygame window and terminates the Pygame instance.

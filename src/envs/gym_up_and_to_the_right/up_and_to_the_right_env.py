@@ -1,3 +1,5 @@
+# Uses OpenAI GYM
+
 import os, subprocess, time, signal
 import numpy as np
 import gym
@@ -5,9 +7,9 @@ from gym import error, spaces, utils
 from gym.utils import seeding
 from src.envs.stock.controller import Controller
 
-
 class UpAndToTheRightEnv(gym.Env):
-    metadata = {'render.modes': ['human']}
+    metadata = {'render.modes': ['human'],
+                'render_fps': 15}
 
     def __init__(self, state_type, reward_type, num_prev_obvs, price_movement_type, offset_scaling, scale, slope, noise,
                  starting_price, num_steps, multiple_units, render):
@@ -63,9 +65,6 @@ class UpAndToTheRightEnv(gym.Env):
 
     def render(self):
         self.controller.render()
-
-    def seed(self, x):
-        pass
 
     def close(self):
         """
