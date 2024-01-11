@@ -170,9 +170,6 @@ class ControllerV2:
             high = self.num_prev_obvs
             return spaces.Box(low=low, high=high, shape=(self.num_prev_obvs,), dtype=int)
 
-    import numpy as np
-    from sklearn.preprocessing import MinMaxScaler
-
     def _get_basic_state(self):
         """
         Computes the basic state representation.
@@ -189,12 +186,6 @@ class ControllerV2:
         if self.step_count + 1 >= self.num_prev_obvs or allow_different_sequence_length:
             num_available_prices = min(self.step_count + 1, self.num_prev_obvs)
             prev_prices = self.trader.price_list[-num_available_prices:]
-
-            # Padding if needed
-            padding_length = self.num_prev_obvs - len(prev_prices)
-            if padding_length > 0:
-                prev_prices = [0] * padding_length + prev_prices  # Padding with zeros
-
             ranks = np.argsort(np.argsort(prev_prices)) + 1
 
             if self.scale:
@@ -208,7 +199,7 @@ class ControllerV2:
 
                 return scaled_ranks.astype(np.float32)
 
-            return np.array(ranks, dtype=int)
+            return ranks.astype(int)
         else:
             raise ValueError("Insufficient data for the requested number of previous observations.")
 

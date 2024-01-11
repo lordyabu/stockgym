@@ -1,6 +1,7 @@
 numpy
 pandas
 gym
+gymnasium
 pytest
 pygame
 scikit-learn
