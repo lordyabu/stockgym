@@ -1,12 +1,12 @@
-from src.envs.stock.controller import Controller
+from src.envs.stock.controller import ControllerV2
 import pygame
 
-controller = Controller(state_type='Basic',
+controller = ControllerV2(state_type='Basic',
                         reward_type='FinalOnly',
                         price_movement_type='Linear',
                         num_prev_obvs=10,
                         offset_scaling=True,
-                        scale=False,
+                        scale=True,
                         graph_width=800,
                         graph_height=600,
                         background_color=(0, 0, 0),
@@ -14,7 +14,8 @@ controller = Controller(state_type='Basic',
                         noise=5,
                         starting_price=100,
                         num_steps=50,
-                        multiple_units=True)
+                        multiple_units=True,
+                        render=True)
 
 try:
     while True:
@@ -26,17 +27,9 @@ try:
         while True:
             print(controller.get_valid_actions())
             action = int(input("Enter your action (0-4): "))
-            if action in controller.get_valid_actions():
-                try:
-                    next_obv, reward, done, info = controller.step(action)  # Process the valid action
-                    break  # Break the loop if the action is valid and processed
-                except Exception as e:
-                    raise ValueError("Going to mask actions so this should not come up ever!!!")
-            elif action in [-1]:
-                exit()
-            else:
-                print(
-                    "Invalid action. Please enter a number between 0 and 4. This should not occur in model: only human")
+            next_obv, reward, done, truncated, info = controller.step(action)  # Process the valid action
+            print(next_obv, reward, done, truncated, info)
+            controller.render()
 
         print(f"PnL: {controller.trader.pnl}, PnL%: {controller.trader.pnl_pct}")
         print(f'Next Observation: {next_obv}, Reward: {reward}, Done: {done}')

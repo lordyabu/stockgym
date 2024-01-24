@@ -1,74 +1,64 @@
-# Uses OpenAI GYM
+# Uses OpenAI Gymnasium
 
-import os, subprocess, time, signal
-import numpy as np
-import gym
-from gym import error, spaces, utils
-from gym.utils import seeding
-from src.envs.stock.controller import Controller
+import gymnasium as gym
+from src.envs.stock.controller import ControllerV2
+from typing import Optional
 
-class UpAndToTheRightEnv(gym.Env):
-    metadata = {'render.modes': ['human'],
-                'render_fps': 15}
+class UpAndToTheRightEnvV2(gym.Env):
+    metadata = {'render_modes': ['human']}
 
-    def __init__(self, state_type, reward_type, num_prev_obvs, price_movement_type, offset_scaling, scale, slope, noise,
-                 starting_price, num_steps, multiple_units, render):
-        assert slope > 0, 'Slope needs to be positive'
-        assert price_movement_type == "Linear", 'Price type needs to be linear'
-
+    def __init__(self, render_mode: Optional[str] = None):
         self.init_params = {
-            'state_type': state_type,
-            'reward_type': reward_type,
-            'price_movement_type': price_movement_type,
-            'num_prev_obvs': num_prev_obvs,
-            'offset_scaling': offset_scaling,
-            'scale': scale,
-            'slope': slope,
-            'noise': noise,
-            'starting_price': starting_price,
-            'num_steps': num_steps,
-            'multiple_units': multiple_units,
-            'render': render,
+            'state_type': "Basic",
+            'reward_type': "FinalOnly",
+            'price_movement_type': "Linear",
+            'num_prev_obvs': 5,
+            'offset_scaling': 1.0,
+            'scale': 1.0,
+            'slope': 1.0,
+            'noise': 0.1,
+            'starting_price': 100,
+            'num_steps': 100,
+            'multiple_units': True,
+            'render': True,
+            'render_mode': render_mode,
             'graph_width': 800,
             'graph_height': 600,
             'background_color': (0, 0, 0),
         }
 
-        self.controller = Controller(state_type=state_type,
-                                     reward_type=reward_type,
-                                     price_movement_type=price_movement_type,
-                                     num_prev_obvs=num_prev_obvs,
-                                     offset_scaling=offset_scaling,
-                                     scale=scale,
-                                     graph_width=800,
-                                     graph_height=600,
-                                     background_color=(0, 0, 0),
-                                     slope=slope,
-                                     noise=noise,
-                                     starting_price=starting_price,
-                                     num_steps=num_steps,
-                                     multiple_units=multiple_units,
-                                     render=render)
+        self.controller = ControllerV2(**self.init_params)
 
-        self.action_space = spaces.Discrete(5)
+        self.render_mode = render_mode
+        self.action_space = gym.spaces.Discrete(5)
         self.observation_space = self.controller.get_observation_space()
         self.state = self.controller.get_state()
 
     def step(self, action):
-        self.state, reward, done, info = self.controller.step(action)
-        return self.state, reward, done, info
+        self.state, reward, done, truncated, info = self.controller.step(action)
+        if self.render_mode == "human":
+            self.render()
+        return self.state, reward, done, truncated, info
 
-    def reset(self):
-        self.controller = Controller(**self.init_params)
+    def reset(self, seed: Optional[int] = None, options: Optional[dict] = None):
+        super().reset(seed=seed)
+        self.controller = ControllerV2(**self.init_params)
         self.state = self.controller.get_state()
-        return self.state
+        return self.state, {}
 
     def render(self):
-        self.controller.render()
-
+        if self.render_mode == "human":
+            self.controller.render()
+        else:
+            gym.logger.warn(
+                "You are calling render method without specifying any render mode. " 
+                "You can specify the render_mode at initialization, ")
     def close(self):
         """
         Closes the environment, including any associated resources like the Pygame window.
         """
         if self.controller.render_graph:
             self.controller.graph.close_window()
+
+
+

@@ -4,14 +4,14 @@ from src.envs.stock.trader import Trader
 from src.envs.stock.price_movement.linear.price_movement_linear import LinearPriceMovement
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
-from gym import spaces
+from gymnasium import spaces
 
 
-class Controller:
+class ControllerV2:
     """
     The Controller class manages the interaction between a stock trading environment and an agent.
     It handles the generation of price movements, tracks the state of the trading environment,
-    executes actions, and computes rewards.
+    executes actions, and computes rewards. This returns truncated as well
     """
 
     def __init__(self, state_type, reward_type, price_movement_type, num_prev_obvs, offset_scaling, scale, graph_width,
@@ -69,22 +69,22 @@ class Controller:
             action (int): The trading action to execute.
 
         Returns:
-            tuple: Tuple containing the new state, reward, completion status, and additional info.
+            tuple: Tuple containing the new state, reward, completion status, truncated, and additional info.
 
         Raises:
             ValueError: If an invalid action is attempted.
         """
 
         if not self.trader.is_valid_action(action):
-            raise ValueError("Invalid action attempted.")
+            return self.get_state(), -100, False, True, {}
 
         self.trader.action(action)
         if self.step_count + 1 < self.num_steps:
             self.get_next_price()
-            return self.get_state(), self.get_reward(is_complete=False), False, {}
+            return self.get_state(), self.get_reward(is_complete=False), False, False, {}
         else:
             self.trader.close_all_positions()
-            return self.get_state(), self.get_reward(is_complete=True), True, {}
+            return self.get_state(), self.get_reward(is_complete=True), True, False, {}
 
     def get_next_price(self):
         """
@@ -197,9 +197,9 @@ class Controller:
                     min_offset = self.kwargs.get('min_offset', 0.01)
                     scaled_ranks += (min_offset * (1 - scaled_ranks))
 
-                return scaled_ranks
+                return scaled_ranks.astype(np.float32)
 
-            return ranks
+            return ranks.astype(int)
         else:
             raise ValueError("Insufficient data for the requested number of previous observations.")
 
