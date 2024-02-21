@@ -22,9 +22,9 @@ class StockGraph:
         self.initialized = False
         self.colors = {
             0: (0, 255, 0),  # Green for 'buy'
-            3: (0, 255, 0),  # Green for 'buy all'
+            3: (50, 255, 0),  # Green for 'buy all'
             1: (255, 0, 0),  # Red for 'sell'
-            4: (255, 0, 0)   # Red for 'sell all'
+            4: (255, 50, 0)   # Red for 'sell all'
         }
 
     def update_graph(self, prices, actions):

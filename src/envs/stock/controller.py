@@ -7,7 +7,7 @@ from sklearn.preprocessing import MinMaxScaler
 from gymnasium import spaces
 
 
-class ControllerV2:
+class Controller:
     """
     The Controller class manages the interaction between a stock trading environment and an agent.
     It handles the generation of price movements, tracks the state of the trading environment,
@@ -79,11 +79,15 @@ class ControllerV2:
             return self.get_state(), -100, False, True, {}
 
         self.trader.action(action)
+
+        # Maybe move into if statement
+        # self.get_next_price()
         if self.step_count + 1 < self.num_steps:
             self.get_next_price()
             return self.get_state(), self.get_reward(is_complete=False), False, False, {}
         else:
             self.trader.close_all_positions()
+            self.get_next_price()
             return self.get_state(), self.get_reward(is_complete=True), True, False, {}
 
     def get_next_price(self):
@@ -189,6 +193,7 @@ class ControllerV2:
             ranks = np.argsort(np.argsort(prev_prices)) + 1
 
             if self.scale:
+                print("SHOULD NOT BE HERE")
                 ranks_reshaped = np.array(ranks).reshape(-1, 1)
                 scaler = MinMaxScaler()
                 scaled_ranks = scaler.fit_transform(ranks_reshaped).flatten()

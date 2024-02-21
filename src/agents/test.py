@@ -1,8 +1,12 @@
+import sys
+sys.path.insert(0, 'C:\\Users\\theal\\PycharmProjects\\stockgym')
+
+
 from src.envs import gym_up_and_to_the_right
 import gymnasium as gym
 
 
-env = gym.make('UpAndToTheRight-v2', render_mode='human')
+env = gym.make('UpAndToTheRight', render_mode='human')
 
 
 observation, info = env.reset()
