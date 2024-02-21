@@ -193,7 +193,6 @@ class Controller:
             ranks = np.argsort(np.argsort(prev_prices)) + 1
 
             if self.scale:
-                print("SHOULD NOT BE HERE")
                 ranks_reshaped = np.array(ranks).reshape(-1, 1)
                 scaler = MinMaxScaler()
                 scaled_ranks = scaler.fit_transform(ranks_reshaped).flatten()

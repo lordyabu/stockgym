@@ -28,7 +28,6 @@ try:
             print(controller.get_valid_actions())
             action = int(input("Enter your action (0-4): "))
             next_obv, reward, done, truncated, info = controller.step(action)  # Process the valid action
-            print(next_obv, reward, done, truncated, info)
             controller.render()
 
         print(f"PnL: {controller.trader.pnl}, PnL%: {controller.trader.pnl_pct}")
