@@ -133,14 +133,14 @@ class Controller:
             raise ValueError(f"Reward type ({self.reward_type}) not yet implemented")
 
     def render(self):
-        """
-        Renders the current state of the stock trading environment.
-        """
-
         if not self.graph.initialized:
             self.graph._initialize_window()
 
-        # This method will update the display
+        # Basic event handling
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.close()  # Ensure this method safely closes the environment and Pygame window
+
         if len(self.trader.action_list) > 1:
             self.graph.screen.fill(self.graph.background_color)
             if len(self.trader.price_list) > len(self.trader.action_list):
@@ -224,3 +224,7 @@ class Controller:
         else:
             self.trader.close_all_positions()
             return self.trader.pnl_pct
+
+    def close(self):
+        if self.graph and self.graph.initialized:
+            pygame.quit()

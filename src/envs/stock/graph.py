@@ -1,5 +1,5 @@
 import pygame
-
+import sys
 
 class StockGraph:
     """
@@ -22,10 +22,16 @@ class StockGraph:
         self.initialized = False
         self.colors = {
             0: (0, 255, 0),  # Green for 'buy'
-            3: (50, 255, 0),  # Green for 'buy all'
+            3: (50, 255, 255),  # Green for 'buy all'
             1: (255, 0, 0),  # Red for 'sell'
-            4: (255, 50, 0)   # Red for 'sell all'
+            4: (255, 50, 255)   # Red for 'sell all'
         }
+
+    def process_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
 
     def update_graph(self, prices, actions):
         """
@@ -74,6 +80,7 @@ class StockGraph:
         """
         Closes the Pygame window and terminates the Pygame instance.
         """
+        pygame.display.quit()
         pygame.quit()
 
     def _initialize_window(self):

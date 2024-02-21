@@ -1,7 +1,7 @@
-from src.envs.stock.controller import ControllerV2
+from src.envs.stock.controller import Controller
 import pygame
 
-controller = ControllerV2(state_type='Basic',
+controller = Controller(state_type='Basic',
                         reward_type='FinalOnly',
                         price_movement_type='Linear',
                         num_prev_obvs=10,
